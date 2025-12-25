@@ -41,7 +41,9 @@ import {
   UserPlus,
   Save,
   Archive,
-  AlertTriangle
+  AlertTriangle,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 // --- Konfigurasi Firebase ---
@@ -78,6 +80,7 @@ const App = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   // State Form Lengkap
   const [jobFormData, setJobFormData] = useState({
@@ -254,9 +257,6 @@ const App = () => {
             {loginError && <div className="text-red-500 text-xs font-bold flex items-center gap-2"><AlertCircle size={14}/>{loginError}</div>}
             <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all">MASUK KE DASHBOARD</button>
           </form>
-          <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100 text-center">
-            <p className="text-[10px] text-blue-500 font-black uppercase mb-1">Admin Default: admin / admin123</p>
-          </div>
         </div>
       </div>
     );
@@ -457,15 +457,26 @@ const App = () => {
       {isUserModalOpen && (
         <Modal title={editingItem ? "Edit User" : "User Baru"} onClose={() => setIsUserModalOpen(false)}>
           <form onSubmit={saveUser} className="space-y-4">
-            <div><label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Nama Lengkap</label><input required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold" value={userFormData.fullName} onChange={e => setUserFormData({...userFormData, fullName: e.target.value})} /></div>
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Username</label><input required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" value={userFormData.username} onChange={e => setUserFormData({...userFormData, username: e.target.value})} /></div>
-              <div><label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Password</label><input required type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none" value={userFormData.password} onChange={e => setUserFormData({...userFormData, password: e.target.value})} /></div>
-            </div>
-            <div><label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Peran (Role)</label><select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-black text-slate-700" value={userFormData.role} onChange={e => setUserFormData({...userFormData, role: e.target.value})}><option value="user">USER (Lihat & Update)</option><option value="admin">ADMIN (Kontrol Penuh)</option></select></div>
-            <div className="pt-4"><button type="submit" className="w-full bg-indigo-600 text-white py-4 rounded-xl font-black uppercase shadow-lg hover:bg-indigo-700 active:scale-95 transition-all">SIMPAN USER</button></div>
-          </form>
-        </Modal>
+          <div>
+          <label className="text-[10px] font-black uppercase text-slate-400 mb-1 block">Password</label>
+          <div className="relative">
+          <input 
+            required 
+            type={showPassword ? "text" : "password"} 
+            placeholder="••••••••" 
+            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none pr-12" // pr-12 memberi ruang untuk icon
+            value={userFormData.password} 
+             onChange={e => setUserFormData({...userFormData, password: e.target.value})} 
+           />
+        <button 
+           type="button"
+           onClick={() => setShowPassword(!showPassword)}
+           className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors"
+         >
+      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </button>
+  </div>
+</div>  
       )}
 
       {/* CUSTOM CONFIRMATION MODAL */}
